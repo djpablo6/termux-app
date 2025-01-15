@@ -1,0 +1,57 @@
+package com.example.djbooking
+
+import android.os.Bundle
+import androidx.appcompat.app.AppCompatActivity
+import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.RecyclerView
+import android.view.LayoutInflater
+import android.view.View
+import android.view.ViewGroup
+import android.widget.TextView
+
+// MainActivity - Displays recent bookings
+class MainActivity : AppCompatActivity() {
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+        setContentView(R.layout.activity_main)
+
+        // RecyclerView for bookings
+        val bookingsRecyclerView: RecyclerView = findViewById(R.id.recyclerView)
+        bookingsRecyclerView.layoutManager = LinearLayoutManager(this)
+        bookingsRecyclerView.adapter = BookingAdapter(getDummyBookings())
+    }
+
+    // Dummy data for testing
+    private fun getDummyBookings(): List<Booking> {
+        return listOf(
+            Booking("Event 1", "15 Jan 2025", "Riyadh"),
+            Booking("Event 2", "20 Jan 2025", "Jeddah")
+        )
+    }
+}
+
+// Booking data class
+data class Booking(val name: String, val date: String, val location: String)
+
+// Adapter to display the bookings in RecyclerView
+class BookingAdapter(private val bookings: List<Booking>) : RecyclerView.Adapter<BookingAdapter.BookingViewHolder>() {
+    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): BookingViewHolder {
+        val view = LayoutInflater.from(parent.context).inflate(R.layout.item_booking, parent, false)
+        return BookingViewHolder(view)
+    }
+
+    override fun onBindViewHolder(holder: BookingViewHolder, position: Int) {
+        val booking = bookings[position]
+        holder.nameTextView.text = booking.name
+        holder.dateTextView.text = booking.date
+        holder.locationTextView.text = booking.location
+    }
+
+    override fun getItemCount(): Int = bookings.size
+
+    class BookingViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
+        val nameTextView: TextView = itemView.findViewById(R.id.bookingName)
+        val dateTextView: TextView = itemView.findViewById(R.id.bookingDate)
+        val locationTextView: TextView = itemView.findViewById(R.id.bookingLocation)
+    }
+}
